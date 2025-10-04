@@ -15,10 +15,10 @@ const generateStars = (numStars) => {
   const stars = [];
   for (let i = 0; i < numStars; i++) {
     const style = {
-      // Position on the left half of the screen
       top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 50}%`,
-      // Random animation duration and delay for a natural twinkle
+      // --- THIS LINE IS THE ONLY CHANGE ---
+      left: `${Math.random() * 100}%`, // Changed from 50% to 100% for full width
+      // ------------------------------------
       animationDuration: `${Math.random() * 5 + 3}s`, // 3s to 8s
       animationDelay: `-${Math.random() * 8}s`,     // Start immediately
     };
