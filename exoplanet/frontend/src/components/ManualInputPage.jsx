@@ -60,35 +60,35 @@ function ManualInputPage() {
     <div className="container">
       <h2 className="text-center">Manual Parameter Input</h2>
       <p className="text-center" style={{ marginBottom: '1.5rem', color: '#aaa' }}>
-        Enter the parameters for a stellar object. An AI analysis will follow, and your input will be downloaded as a JSON file.
+        Enter the parameters for a stellar object. 
       </p>
       <form onSubmit={handleSubmit} className="input-form">
         <div className="form-group">
-          <label>Orbital Period (days) - `koi_period`</label>
+          <label>Orbital Period (days) </label>
           <input type="number" name="koi_period" placeholder="e.g., 12.3" value={formData.koi_period} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Transit Duration (hours) - `koi_duration`</label>
+          <label>Transit Duration (hours) </label>
           <input type="number" name="koi_duration" placeholder="e.g., 5.4" value={formData.koi_duration} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Transit Depth (ppm) - `koi_depth`</label>
+          <label>Transit Depth (ppm) </label>
           <input type="number" name="koi_depth" placeholder="e.g., 250.6" value={formData.koi_depth} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Planetary Radius (Earth radii) - `koi_prad`</label>
+          <label>Planetary Radius (Earth radii) </label>
           <input type="number" name="koi_prad" placeholder="e.g., 4.5" value={formData.koi_prad} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Equilibrium Temperature (K) - `koi_teq`</label>
+          <label>Equilibrium Temperature (K) </label>
           <input type="number" name="koi_teq" placeholder="e.g., 750" value={formData.koi_teq} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Insolation Flux (Earth flux) - `koi_insol`</label>
+          <label>Insolation Flux (Earth flux) </label>
           <input type="number" name="koi_insol" placeholder="e.g., 88.6" value={formData.koi_insol} onChange={handleChange} required step="any"/>
         </div>
         <div className="form-group">
-          <label>Stellar Effective Temp (K) - `koi_steff`</label>
+          <label>Stellar Effective Temp (K) </label>
           <input type="number" name="koi_steff" placeholder="e.g., 5900" value={formData.koi_steff} onChange={handleChange} required step="any"/>
         </div>
         <button type="submit" className="btn btn-primary form-submit-btn">
