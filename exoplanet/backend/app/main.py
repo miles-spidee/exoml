@@ -1,6 +1,7 @@
 # Main FastAPI application entry point
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .predict import router as predict_router
 
 app = FastAPI(title="Exoplanet Detection API", version="1.0.0")
 
@@ -12,6 +13,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include prediction routes
+app.include_router(predict_router, prefix="", tags=["predictions"])
 
 @app.get("/")
 async def root():

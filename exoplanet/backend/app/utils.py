@@ -1,49 +1,87 @@
-# Utility functions
+import joblib
 import numpy as np
-from typing import List, Dict, Any
-import logging
+from typing import Dict, List, Any
+import os
 
-logger = logging.getLogger(__name__)
-
-def validate_features(features: List[float]) -> bool:
-    """Validate input features for exoplanet prediction."""
-    if not features:
-        return False
-    
-    if len(features) == 0:
-        return False
-    
-    # Check for NaN or infinite values
+def load_model_artifacts():
+    """Load the trained model, scaler, and feature names"""
     try:
-        features_array = np.array(features)
-        if np.any(np.isnan(features_array)) or np.any(np.isinf(features_array)):
-            return False
+        model_path = os.path.join(os.path.dirname(__file__), '../models/exoplanet_model.pkl')
+        scaler_path = os.path.join(os.path.dirname(__file__), '../models/exoplanet_scaler.pkl')
+        features_path = os.path.join(os.path.dirname(__file__), '../models/model_features.pkl')
+        
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+        feature_names = joblib.load(features_path)
+        
+        return model, scaler, feature_names
     except Exception as e:
-        logger.error(f"Error validating features: {e}")
-        return False
-    
-    return True
+        raise Exception(f"Error loading model artifacts: {e}")
 
-def normalize_features(features: List[float]) -> List[float]:
-    """Normalize features to standard scale."""
-    features_array = np.array(features)
-    # Simple min-max normalization
-    normalized = (features_array - np.min(features_array)) / (np.max(features_array) - np.min(features_array))
-    return normalized.tolist()
-
-def calculate_feature_importance(features: List[float], feature_names: List[str] = None) -> Dict[str, float]:
-    """Calculate relative importance of features."""
-    if feature_names is None:
-        feature_names = [f"feature_{i}" for i in range(len(features))]
+def validate_features(features: Dict[str, float]) -> Dict[str, Any]:
+    """
+    Validate input features for exoplanet prediction
     
-    # Simple importance based on absolute values
-    total = sum(abs(f) for f in features)
-    if total == 0:
-        return {name: 0.0 for name in feature_names}
+    Args:
+        features: Dictionary of feature names and values
+        
+    Returns:
+        Dictionary with validation results
+    """
+    required_features = [
+        'koi_period', 'koi_duration', 'koi_depth', 'koi_prad', 
+        'koi_teq', 'koi_insol', 'koi_steff'
+    ]
     
-    importance = {name: abs(value) / total for name, value in zip(feature_names, features)}
-    return importance
+    validation_result = {
+        "is_valid": True,
+        "errors": [],
+        "warnings": []
+    }
+    
+    # Check for missing features
+    missing_features = [f for f in required_features if f not in features]
+    if missing_features:
+        validation_result["is_valid"] = False
+        validation_result["errors"].append(f"Missing required features: {missing_features}")
+    
+    # Check for valid numeric values
+    for feature_name in required_features:
+        if feature_name in features:
+            value = features[feature_name]
+            if not isinstance(value, (int, float)):
+                validation_result["is_valid"] = False
+                validation_result["errors"].append(f"{feature_name} must be a number")
+            elif value < 0:
+                validation_result["warnings"].append(f"{feature_name} is negative, which may be unusual")
+    
+    # Feature-specific validations
+    if 'koi_period' in features and features['koi_period'] > 10000:
+        validation_result["warnings"].append("Orbital period > 10,000 days is very long")
+    
+    if 'koi_duration' in features and features['koi_duration'] > 100:
+        validation_result["warnings"].append("Transit duration > 100 hours is very long")
+    
+    if 'koi_steff' in features:
+        temp = features['koi_steff']
+        if temp < 2000 or temp > 10000:
+            validation_result["warnings"].append("Stellar temperature outside typical range (2000-10000K)")
+    
+    return validation_result
 
-def log_prediction(features: List[float], prediction: Dict[str, Any]):
-    """Log prediction for monitoring purposes."""
-    logger.info(f"Prediction made: {prediction} for features: {features[:3]}...")  # Log first 3 features for privacy
+def prepare_features_for_prediction(features: Dict[str, float], feature_names: List[str]) -> np.ndarray:
+    """
+    Prepare features for model prediction
+    
+    Args:
+        features: Dictionary of feature values
+        feature_names: List of feature names in correct order
+        
+    Returns:
+        Numpy array of features ready for prediction
+    """
+    # Extract features in the correct order
+    feature_values = [features[name] for name in feature_names]
+    
+    # Convert to numpy array and reshape for single prediction
+    return np.array(feature_values).reshape(1, -1)
