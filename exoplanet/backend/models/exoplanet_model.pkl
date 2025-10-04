@@ -1,0 +1,4 @@
+# Placeholder for exoplanet_model.pkl
+# This file represents a trained machine learning model
+# In a real implementation, this would be a binary pickle file containing your trained model
+# For now, this is just a placeholder file that indicates where the model should be placed
