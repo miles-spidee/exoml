@@ -1,49 +1,35 @@
-# Utility functions
-import numpy as np
-from typing import List, Dict, Any
-import logging
+# backend/app/utils.py
 
-logger = logging.getLogger(__name__)
+from pydantic import BaseModel
+import pandas as pd
+from typing import List
 
-def validate_features(features: List[float]) -> bool:
-    """Validate input features for exoplanet prediction."""
-    if not features:
-        return False
-    
-    if len(features) == 0:
-        return False
-    
-    # Check for NaN or infinite values
-    try:
-        features_array = np.array(features)
-        if np.any(np.isnan(features_array)) or np.any(np.isinf(features_array)):
-            return False
-    except Exception as e:
-        logger.error(f"Error validating features: {e}")
-        return False
-    
-    return True
+# --- DATA VALIDATION MODEL ---
 
-def normalize_features(features: List[float]) -> List[float]:
-    """Normalize features to standard scale."""
-    features_array = np.array(features)
-    # Simple min-max normalization
-    normalized = (features_array - np.min(features_array)) / (np.max(features_array) - np.min(features_array))
-    return normalized.tolist()
+# Use Pydantic to define the structure of the input data
+# This provides automatic data validation and clear error messages.
+# The feature names here MUST match the ones your model was trained on.
+class ExoplanetData(BaseModel):
+    koi_period: float
+    koi_duration: float
+    koi_depth: float
+    koi_prad: float
+    koi_teq: float
+    koi_insol: float
+    koi_steff: float
 
-def calculate_feature_importance(features: List[float], feature_names: List[str] = None) -> Dict[str, float]:
-    """Calculate relative importance of features."""
-    if feature_names is None:
-        feature_names = [f"feature_{i}" for i in range(len(features))]
-    
-    # Simple importance based on absolute values
-    total = sum(abs(f) for f in features)
-    if total == 0:
-        return {name: 0.0 for name in feature_names}
-    
-    importance = {name: abs(value) / total for name, value in zip(feature_names, features)}
-    return importance
 
-def log_prediction(features: List[float], prediction: Dict[str, Any]):
-    """Log prediction for monitoring purposes."""
-    logger.info(f"Prediction made: {prediction} for features: {features[:3]}...")  # Log first 3 features for privacy
+# --- DATA PREPROCESSING FUNCTION ---
+
+def preprocess_input(data: ExoplanetData, feature_order: List[str]) -> pd.DataFrame:
+    """
+    Converts the Pydantic model into a Pandas DataFrame with the
+    correct column order for the model.
+    """
+    # Convert the Pydantic model to a dictionary
+    input_dict = data.dict()
+    
+    # Create a DataFrame from the dictionary, ensuring the correct feature order
+    input_df = pd.DataFrame([input_dict], columns=feature_order)
+    
+    return input_df
