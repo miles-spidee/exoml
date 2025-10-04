@@ -3,7 +3,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto; /* Header, Main (stretches), Footer */
   min-height: 100vh;
-  position: relative; /* Added for positioning the background */
+  position: relative; /* Crucial for positioning the background */
   overflow: hidden; /* Prevents animations from causing scrollbars */
 }
 
@@ -424,7 +424,7 @@ h2 {
 }
 
 /* ========================================= */
-/* === NEW BACKGROUND ANIMATIONS === */
+/* === BACKGROUND ANIMATIONS === */
 /* ========================================= */
 
 .background-animations {
@@ -433,22 +433,16 @@ h2 {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Ensures it's behind all content */
-  --comet-play-state: running; /* Custom property to control comets */
-  animation: scene-controller 20s linear infinite;
+  z-index: 0;
+  --comet-play-state: running;
+  animation: scene-controller 15s linear infinite;
 }
 
-/* This animation controls when the comets pause */
 @keyframes scene-controller {
-  0%, 45%, 80%, 100% {
-    --comet-play-state: running;
-  }
-  50%, 75% {
-    --comet-play-state: paused;
-  }
+  0%, 45%, 80%, 100% { --comet-play-state: running; }
+  50%, 75% { --comet-play-state: paused; }
 }
 
-/* --- The Moon --- */
 .moon {
   position: absolute;
   top: 10%;
@@ -458,94 +452,96 @@ h2 {
   border-radius: 50%;
   box-shadow: 0 0 30px #fff, 0 0 50px #fff, inset -15px 0 20px rgba(0,0,0,0.3);
   background: #f5f3ce;
-  animation: moon-phase 20s linear infinite;
+  animation: moon-phase 15s linear infinite;
 }
 
-/* The moon fades in and out in sync with the scene-controller */
 @keyframes moon-phase {
-  0%, 45%, 80%, 100% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  50%, 75% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0%, 45%, 80%, 100% { opacity: 0; transform: scale(0.8); }
+  50%, 75% { opacity: 1; transform: scale(1); }
 }
 
-
-/* --- Realistic Comets --- */
 .comet {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  top: var(--top-offset, 0);
+  left: 0;
+  width: 6px;
+  height: 6px;
   background-color: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px var(--primary-glow);
-  animation-name: comet-flight;
-  animation-timing-function: ease-in-out;
+  box-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 24px var(--primary-glow);
+  animation-name: comet-fall;
+  animation-timing-function: ease-in;
   animation-iteration-count: infinite;
-  animation-play-state: var(--comet-play-state); /* Controlled by parent */
+  animation-play-state: var(--comet-play-state);
 }
 
-/* The comet's tail */
 .comet::after {
   content: '';
   position: absolute;
   top: 50%;
-  left: 4px;
-  width: 200px;
+  left: 3px;
   height: 2px;
-  background: linear-gradient(to right, rgba(255,255,255,0.5), transparent);
-  transform: translateY(-50%);
+  width: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.4), transparent);
+  transform-origin: left center;
+  transform: translateY(-50%) rotate(var(--rotate));
+  animation-name: comet-tail;
+  animation-timing-function: inherit;
+  animation-iteration-count: inherit;
+  animation-play-state: inherit;
+  animation-duration: inherit;
+  animation-delay: inherit;
 }
 
-/* Flight path keyframes */
-@keyframes comet-flight {
-  0% {
-    opacity: 0;
-    transform: translateX(0) translateY(0) rotate(-45deg);
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-80vw) translateY(40vh) rotate(-45deg);
-  }
+@keyframes comet-fall {
+  0% { transform: translate(var(--start-x), var(--start-y)); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(var(--end-x), var(--end-y)); opacity: 0; }
 }
 
-/* Variations for each comet */
+@keyframes comet-tail {
+  0%, 10% { width: 0; }
+  40%, 60% { width: 200px; }
+  100% { width: 0; }
+}
+
+/* Comet Variations */
 .comet:nth-child(2) {
-  top: 20%;
-  left: 100%;
-  animation-duration: 10s;
-  animation-delay: 2s;
+  --top-offset: 5%; --start-x: 90vw; --start-y: 0vh; --end-x: 50vw; --end-y: 50vh; --rotate: -40deg;
+  animation-duration: 14s; animation-delay: -3s;
 }
 .comet:nth-child(3) {
-  top: 80%;
-  left: 100%;
-  animation-duration: 8s;
-  animation-delay: 4s;
+  --top-offset: 15%; --start-x: 100vw; --start-y: 20vh; --end-x: 40vw; --end-y: 80vh; --rotate: -55deg;
+  animation-duration: 18s; animation-delay: -5s;
 }
 .comet:nth-child(4) {
-  top: 10%;
-  left: 100%;
-  animation-duration: 12s;
-  animation-delay: 6s;
+  --top-offset: 30%; --start-x: 80vw; --start-y: -10vh; --end-x: 10vw; --end-y: 60vh; --rotate: -30deg;
+  animation-duration: 12s; animation-delay: -8s;
 }
 .comet:nth-child(5) {
-  top: 50%;
-  left: 100%;
-  animation-duration: 7s;
-  animation-delay: 8s;
+  --top-offset: 5%; --start-x: 110vw; --start-y: 50vh; --end-x: 60vw; --end-y: 100vh; --rotate: -65deg;
+  animation-duration: 16s; animation-delay: -1s;
 }
 .comet:nth-child(6) {
-  top: 60%;
-  left: 100%;
-  animation-duration: 9s;
-  animation-delay: 10s;
+  --top-offset: 50%; --start-x: 90vw; --start-y: -20vh; --end-x: -10vw; --end-y: 70vh; --rotate: -25deg;
+  animation-duration: 15s; animation-delay: -10s;
+}
+
+/* --- Twinkling Stars (CLEANED UP) --- */
+.twinkling-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px 1px #fff;
+  animation-name: twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
 }

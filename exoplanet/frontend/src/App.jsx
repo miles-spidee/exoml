@@ -10,16 +10,37 @@ import ResultPage from './components/ResultPage.jsx';
 import LoadingPage from './components/LoadingPage.jsx';
 import './App.css';
 
+// This function programmatically creates our starfield
+const generateStars = (numStars) => {
+  const stars = [];
+  for (let i = 0; i < numStars; i++) {
+    const style = {
+      // Position on the left half of the screen
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 50}%`,
+      // Random animation duration and delay for a natural twinkle
+      animationDuration: `${Math.random() * 5 + 3}s`, // 3s to 8s
+      animationDelay: `-${Math.random() * 8}s`,     // Start immediately
+    };
+    stars.push(<div key={`star-${i}`} className="twinkling-star" style={style}></div>);
+  }
+  return stars;
+};
+
+
 function App() {
   return (
     <div className="app-grid-container">
-      {/* This new section creates the animated background elements */}
       <div className="background-animations">
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
+        <div className="moon"></div>
+        <div className="comet"></div>
+        <div className="comet"></div>
+        <div className="comet"></div>
+        <div className="comet"></div>
+        <div className="comet"></div>
+        
+        {/* We now call the function to generate 100 stars */}
+        {generateStars(100)}
       </div>
 
       <Navbar />
