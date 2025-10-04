@@ -424,7 +424,7 @@ h2 {
 }
 
 /* ========================================= */
-/* === BACKGROUND ANIMATIONS === */
+/* === BACKGROUND ANIMATIONS (REVISED) === */
 /* ========================================= */
 
 .background-animations {
@@ -435,14 +435,20 @@ h2 {
   height: 100%;
   z-index: 0;
   --comet-play-state: running;
-  animation: scene-controller 15s linear infinite;
+  /* UPDATED DURATION: 15s on + 3s off = 18s total */
+  animation: scene-controller 18s linear infinite;
 }
 
+/* UPDATED keyframes to match 18s cycle */
 @keyframes scene-controller {
-  0%, 45%, 80%, 100% { --comet-play-state: running; }
-  50%, 75% { --comet-play-state: paused; }
+  /* Comets run for the first 3s */
+  0%, 16% { --comet-play-state: running; }
+  /* Comets pause for the 15s the moon is visible */
+  17%, 99% { --comet-play-state: paused; }
+  100% { --comet-play-state: running; }
 }
 
+/* --- The Moon --- */
 .moon {
   position: absolute;
   top: 10%;
@@ -452,14 +458,26 @@ h2 {
   border-radius: 50%;
   box-shadow: 0 0 30px #fff, 0 0 50px #fff, inset -15px 0 20px rgba(0,0,0,0.3);
   background: #f5f3ce;
-  animation: moon-phase 15s linear infinite;
+  /* UPDATED DURATION: 18s total cycle */
+  animation: moon-phase 18s linear infinite;
 }
 
+/* UPDATED keyframes for 15s visible, 3s invisible */
 @keyframes moon-phase {
-  0%, 45%, 80%, 100% { opacity: 0; transform: scale(0.8); }
-  50%, 75% { opacity: 1; transform: scale(1); }
+  /* 0-16.6% = 3s invisible period */
+  0%, 16.6% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  /* 16.7%-100% = 15s visible period */
+  16.7%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
+
+/* --- Realistic Comets --- */
 .comet {
   position: absolute;
   top: var(--top-offset, 0);
@@ -528,7 +546,7 @@ h2 {
   animation-duration: 15s; animation-delay: -10s;
 }
 
-/* --- Twinkling Stars (CLEANED UP) --- */
+/* --- Twinkling Stars --- */
 .twinkling-star {
   position: absolute;
   width: 2px;
@@ -544,4 +562,54 @@ h2 {
 @keyframes twinkle {
   0%, 100% { opacity: 0.1; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
+}
+
+.background-animations > div.twinkling-star {
+    animation-play-state: var(--comet-play-state);
+}
+/* Individual star positions and timings */
+.background-animations > div:nth-child(8).twinkling-star {
+  top: 30%; left: 10%; animation-duration: 5s; animation-delay: -1s;
+}
+.background-animations > div:nth-child(9).twinkling-star {
+  top: 50%; left: 40%; animation-duration: 4s; animation-delay: -3s;
+}
+.background-animations > div:nth-child(10).twinkling-star {
+  top: 80%; left: 20%; animation-duration: 6s; animation-delay: -0.5s;
+}
+.background-animations > div:nth-child(11).twinkling-star {
+  top: 15%; left: 35%; animation-duration: 3s; animation-delay: -2.5s;
+}
+.background-animations > div:nth-child(12).twinkling-star {
+  top: 90%; left: 45%; animation-duration: 5s; animation-delay: -4s;
+}
+.background-animations > div:nth-child(13).twinkling-star {
+  top: 5%; left: 25%; animation-duration: 4.5s; animation-delay: -0.2s;
+}
+.background-animations > div:nth-child(14).twinkling-star {
+  top: 45%; left: 5%; animation-duration: 7s; animation-delay: -5s;
+}
+.background-animations > div:nth-child(15).twinkling-star {
+  top: 70%; left: 38%; animation-duration: 3.5s; animation-delay: -1.8s;
+}
+.background-animations > div:nth-child(16).twinkling-star {
+  top: 95%; left: 15%; animation-duration: 5.5s; animation-delay: -3.3s;
+}
+.background-animations > div:nth-child(17).twinkling-star {
+  top: 65%; left: 28%; animation-duration: 6.5s; animation-delay: -0.8s;
+}
+.background-animations > div:nth-child(18).twinkling-star {
+  top: 25%; left: 55%; animation-duration: 5s; animation-delay: -1.2s;
+}
+.background-animations > div:nth-child(19).twinkling-star {
+  top: 55%; left: 95%; animation-duration: 4.5s; animation-delay: -3.5s;
+}
+.background-animations > div:nth-child(20).twinkling-star {
+  top: 85%; left: 60%; animation-duration: 6.5s; animation-delay: -0.8s;
+}
+.background-animations > div:nth-child(21).twinkling-star {
+  top: 5%; left: 85%; animation-duration: 3.5s; animation-delay: -2.8s;
+}
+.background-animations > div:nth-child(22).twinkling-star {
+  top: 95%; left: 90%; animation-duration: 5.5s; animation-delay: -4.2s;
 }
