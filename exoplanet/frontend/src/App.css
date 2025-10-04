@@ -3,6 +3,8 @@
   display: grid;
   grid-template-rows: auto 1fr auto; /* Header, Main (stretches), Footer */
   min-height: 100vh;
+  position: relative; /* Added for positioning the background */
+  overflow: hidden; /* Prevents animations from causing scrollbars */
 }
 
 main {
@@ -13,6 +15,7 @@ main {
   width: 100%;
   max-width: 900px;
   margin: 0 auto; /* Center the main content */
+  z-index: 1; /* Ensures main content is above the background */
 }
 
 
@@ -28,7 +31,7 @@ main {
   100% { box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow); }
 }
 
-/* --- Glass Container --- */
+/* --- Glass Container (for most pages) --- */
 .container {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -65,6 +68,7 @@ h2 {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--glass-border);
+  z-index: 2; /* Ensures navbar is above background */
 }
 
 .navbar-title {
@@ -108,6 +112,7 @@ h2 {
   -webkit-backdrop-filter: blur(10px);
   font-size: 0.8rem;
   color: #aaa;
+  z-index: 2; /* Ensures footer is above background */
 }
 
 
@@ -138,20 +143,6 @@ h2 {
 .btn:hover {
   box-shadow: 0 0 25px var(--primary-glow), 0 0 40px var(--primary-glow);
   transform: translateY(-2px);
-}
-
-/* --- Landing Page --- */
-.landing-content img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin: 1.5rem 0;
-  border: 1px solid var(--glass-border);
-}
-.landing-content p {
-  line-height: 1.7;
-  font-size: 1.1rem;
-  text-align: left;
-  margin-bottom: 2rem;
 }
 
 /* --- Input Select Page --- */
@@ -326,10 +317,235 @@ h2 {
   100% { transform: translateY(200px); }
 }
 
+/* ========================================= */
+/* === STYLES FOR LANDING PAGE === */
+/* ========================================= */
+
+.landing-container {
+  width: 100%;
+  max-width: 1000px; /* Wider container for the landing page */
+  animation: fadeIn 0.8s ease-out;
+  padding: 2rem 1rem;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white; 
+  text-shadow: 0 0 15px var(--primary-glow);
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  color: var(--text-color);
+  max-width: 750px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* --- Features Section --- */
+.features-section {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border-color: var(--primary-glow);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: var(--primary-glow);
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.feature-card p {
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* --- Impact Section --- */
+.impact-section {
+  padding: 4rem 0;
+}
+
+.impact-section p {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 2rem auto 0 auto;
+  color: #ccc;
+}
+
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
   .navbar { padding: 0 1rem; }
   .navbar-title { font-size: 1.2rem; }
   .card-container, .input-form { flex-direction: column; display: flex; }
+
+  /* Landing Page Responsive */
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================= */
+/* === NEW BACKGROUND ANIMATIONS === */
+/* ========================================= */
+
+.background-animations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Ensures it's behind all content */
+  --comet-play-state: running; /* Custom property to control comets */
+  animation: scene-controller 20s linear infinite;
+}
+
+/* This animation controls when the comets pause */
+@keyframes scene-controller {
+  0%, 45%, 80%, 100% {
+    --comet-play-state: running;
+  }
+  50%, 75% {
+    --comet-play-state: paused;
+  }
+}
+
+/* --- The Moon --- */
+.moon {
+  position: absolute;
+  top: 10%;
+  left: 75%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 0 30px #fff, 0 0 50px #fff, inset -15px 0 20px rgba(0,0,0,0.3);
+  background: #f5f3ce;
+  animation: moon-phase 20s linear infinite;
+}
+
+/* The moon fades in and out in sync with the scene-controller */
+@keyframes moon-phase {
+  0%, 45%, 80%, 100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50%, 75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* --- Realistic Comets --- */
+.comet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px var(--primary-glow);
+  animation-name: comet-flight;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: var(--comet-play-state); /* Controlled by parent */
+}
+
+/* The comet's tail */
+.comet::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(to right, rgba(255,255,255,0.5), transparent);
+  transform: translateY(-50%);
+}
+
+/* Flight path keyframes */
+@keyframes comet-flight {
+  0% {
+    opacity: 0;
+    transform: translateX(0) translateY(0) rotate(-45deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-80vw) translateY(40vh) rotate(-45deg);
+  }
+}
+
+/* Variations for each comet */
+.comet:nth-child(2) {
+  top: 20%;
+  left: 100%;
+  animation-duration: 10s;
+  animation-delay: 2s;
+}
+.comet:nth-child(3) {
+  top: 80%;
+  left: 100%;
+  animation-duration: 8s;
+  animation-delay: 4s;
+}
+.comet:nth-child(4) {
+  top: 10%;
+  left: 100%;
+  animation-duration: 12s;
+  animation-delay: 6s;
+}
+.comet:nth-child(5) {
+  top: 50%;
+  left: 100%;
+  animation-duration: 7s;
+  animation-delay: 8s;
+}
+.comet:nth-child(6) {
+  top: 60%;
+  left: 100%;
+  animation-duration: 9s;
+  animation-delay: 10s;
 }

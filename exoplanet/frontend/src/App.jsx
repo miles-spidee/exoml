@@ -13,6 +13,15 @@ import './App.css';
 function App() {
   return (
     <div className="app-grid-container">
+      {/* This new section creates the animated background elements */}
+      <div className="background-animations">
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+        <div className="shooting-star"></div>
+      </div>
+
       <Navbar />
       <main>
         <Routes>
