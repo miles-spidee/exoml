@@ -1,0 +1,62 @@
+# Name of your GitHub Actions workflow
+name: CI Checks for Backend and Frontend
+
+# Controls when the action will run.
+# This runs on pushes to the 'main' branch and on pull requests.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run in parallel
+jobs:
+  # This job checks the backend code
+  backend-ci:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Sets up a Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # Installs dependencies from requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install flake8 # Install a linter
+      
+      # Runs the linter to check for code style issues
+      - name: Lint with flake8
+        run: |
+          flake8 backend/app --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  # This job checks the frontend code
+  frontend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Sets up a Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Installs dependencies and runs the build command
+      - name: Install dependencies and build
+        run: |
+          cd frontend
+          npm install
+          npm run build
