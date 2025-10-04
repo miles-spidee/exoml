@@ -1,9 +1,14 @@
 {
-  "koi_period": 12.3,
-  "koi_duration": 5.4,
-  "koi_depth": 250.6,
-  "koi_prad": 4.5,
-  "koi_teq": 750,
-  "koi_insol": 88.6,
-  "koi_steff": 5900
+  "predictions": [
+    {
+      "run_id": "YOUR_RUN_001",
+      "koi_period": 16.4998377,
+      "koi_duration": 9.4378,
+      "koi_depth": 10478.9,
+      "koi_prad": 7.94,
+      "koi_teq": 595.0,
+      "koi_insol": 29.61,
+      "koi_steff": 5152
+    }
+  ]
 }
