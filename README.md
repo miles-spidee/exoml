@@ -27,6 +27,7 @@ An AI-powered web application to detect potential exoplanets from transit survey
 
 The project is organized into a clean and modular structure:
 
+```
 exoplanet-hackathon/
 │
 ├── backend/
@@ -43,7 +44,7 @@ exoplanet-hackathon/
 │
 ├── train_model.py      # Script to train the ML model
 └── README.md           # You are here!
-
+```
 
 ---
 
