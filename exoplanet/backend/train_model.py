@@ -16,7 +16,9 @@ MODEL_NAME = "exoplanet_model.pkl"
 SCALER_NAME = "exoplanet_scaler.pkl"
 FEATURES_NAME = "model_features.pkl"
 
-# --- 1. Load the Data ---
+# --- 1. Load the Data
+# 
+#  ---
 print(f"Loading data from {DATA_PATH}...")
 try:
     # Kepler data often has commented lines at the top; we skip them
