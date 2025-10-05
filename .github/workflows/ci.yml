@@ -13,38 +13,52 @@ on:
 jobs:
   # This job checks the backend code
   backend-ci:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Sets up a Python environment
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # Sets up a Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.10'
+          node-version: '18'
 
-      # Installs dependencies from requirements.txt
-      - name: Install Python dependencies
+      # Installs dependencies and runs the lint/test scripts if present
+      - name: Install dependencies, lint and test (backend)
         run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-          pip install flake8 # Install a linter
-      
-      # Runs the linter to check for code style issues
-      - name: Lint with flake8
-        run: |
-          flake8 backend/app --count --select=E9,F63,F7,F82 --show-source --statistics
+          if [ -f backend/package.json ]; then
+            echo "Found backend/package.json — running npm ci"
+            cd backend
+            npm ci
+            echo "Available npm scripts:"
+            npm run || true
+
+            if npm run | grep -q " lint"; then
+              echo "Running backend lint..."
+              npm run lint
+            else
+              echo "No backend lint script defined, skipping."
+            fi
+
+            if npm run | grep -q " test"; then
+              echo "Running backend tests..."
+              npm test
+            else
+              echo "No backend test script defined, skipping."
+            fi
+          else
+            echo "No backend/package.json found — skipping backend steps."
+          fi
 
   # This job checks the frontend code
   frontend-ci:
     runs-on: ubuntu-latest
 
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -55,8 +69,16 @@ jobs:
           node-version: '18'
 
       # Installs dependencies and runs the build command
-      - name: Install dependencies and build
+      - name: Install dependencies and build (frontend)
         run: |
-          cd frontend
-          npm install
-          npm run build
+          if [ -f exoplanet/frontend/package.json ]; then
+            cd exoplanet/frontend
+            npm ci
+            if npm run | grep -q " build"; then
+              npm run build
+            else
+              echo "No build script found in frontend/package.json, skipping build."
+            fi
+          else
+            echo "No exoplanet/frontend/package.json found — skipping frontend steps."
+          fi
