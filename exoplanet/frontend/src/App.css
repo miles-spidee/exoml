@@ -3,8 +3,8 @@
   display: grid;
   grid-template-rows: auto 1fr auto; /* Header, Main (stretches), Footer */
   min-height: 100vh;
-  position: relative; /* Crucial for positioning the background */
-  overflow: hidden; /* Prevents animations from causing scrollbars */
+  position: relative;
+  overflow: hidden;
 }
 
 main {
@@ -317,9 +317,6 @@ h2 {
   100% { transform: translateY(200px); }
 }
 
-/* ========================================= */
-/* === STYLES FOR LANDING PAGE === */
-/* ========================================= */
 
 .landing-container {
   width: 100%;
@@ -459,18 +456,19 @@ h2 {
   box-shadow: 0 0 30px #fff, 0 0 50px #fff, inset -15px 0 20px rgba(0,0,0,0.3);
   background: #f5f3ce;
   /* UPDATED DURATION: 18s total cycle */
-  animation: moon-phase 18s linear infinite;
+  animation: moon-phase 10s linear infinite;
 }
 
 /* UPDATED keyframes for 15s visible, 3s invisible */
 @keyframes moon-phase {
   /* 0-16.6% = 3s invisible period */
-  0%, 16.6% {
+   /* 0-27.7% = 5s invisible period */
+  0%, 50%{
     opacity: 0;
     transform: scale(0.8);
   }
   /* 16.7%-100% = 15s visible period */
-  16.7%, 100% {
+  50%, 100% {
     opacity: 1;
     transform: scale(1);
   }
