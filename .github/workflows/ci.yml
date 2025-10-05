@@ -1,7 +1,7 @@
 # Name of your GitHub Actions workflow
 name: CI Checks for Backend and Frontend
 
-# Controls when the action will run.
+# Controls when the action will run
 # This runs on pushes to the 'main' branch and on pull requests.
 on:
   push:
